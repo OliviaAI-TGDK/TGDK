@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stdint.h>
 #include <time.h>
+#include "dimfo.t"
 #define MEMORY_EXPANSION_SNELL 4096
 #define MARA_REALIGNMENT_FACTOR 1.6180339887
 #define PHI 1.6180339887
