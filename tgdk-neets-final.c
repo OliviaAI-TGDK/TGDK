@@ -63,6 +63,7 @@ void* duo_corrugation_task(void* arg) {
             printf("[NEETs pod: duo-phi-%d | node: phi-%d] iter %02d ratio %.3f clipped %.3f | PHI x%.4f | hash %02x%02x%02x | %d/%d [%s]\n", w->worker_id, lid, iter, ratio, clipped, PHI, b->hash[0], b->hash[1], b->hash[2], lat->count, LATTICE_SIZE, lat->status);
         } else {
             lattice_t* lat = &pi_lattice[0];
+            dimfo_apply_to_lattice(lat, w->worker_id, b);
             if(lat->count < LATTICE_SIZE) { strcpy(lat->status, "Corrugating"); lat->blocks[lat->count++] = b; double angle = 2 * PI_L * iter / 20.0; for(int i=0;i<MEMORY_EXPANSION_SNELL;i++) { double corrug = sin(angle + i * PI_L / 180.0) * 50; b->data[i] = (uint8_t)(b->data[i] + (int)corrug); } if(global_chain_count % 8 == 0) strcpy(lat->status, "Sealed"); }
             printf("[NEETs pod: duo-pi-3  | node: pi-0 ] iter %02d ratio %.3f clipped %.3f | PI  x%.4f | hash %02x%02x%02x | %d/%d [%s]\n", iter, ratio, clipped, PI_L, b->hash[0], b->hash[1], b->hash[2], lat->count, LATTICE_SIZE, lat->status);
         }
@@ -75,6 +76,7 @@ int main() {
     for(int i=0;i<3;i++) { phi_lattice[i].scaling_factor = PHI; phi_lattice[i].lattice_id = i; phi_lattice[i].count = 0; strcpy(phi_lattice[i].status, "Ready"); snprintf(phi_lattice[i].name, 16, "phi-%d", i); }
     pi_lattice[0].scaling_factor = PI_L; pi_lattice[0].lattice_id = 3; pi_lattice[0].count = 0; strcpy(pi_lattice[0].status, "Ready"); snprintf(pi_lattice[0].name, 16, "pi-0");
     printf("neets get nodes\nNAME    LATTICE  FACTOR     STATUS\n"); for(int i=0;i<3;i++) printf("%-7s %-8s %-10.4f %s\n", phi_lattice[i].name, "phi", phi_lattice[i].scaling_factor, phi_lattice[i].status); printf("%-7s %-8s %-10.4f %s\n\n", pi_lattice[0].name, "pi", pi_lattice[0].scaling_factor, pi_lattice[0].status);
+    dimfo_init();
     corrugation_worker_t workers[4]; pthread_t threads[4];
     printf("neets apply -f deployment.yaml - Starting 4 duo-corrugation pods...\n\n");
     for(int i=0;i<4;i++) { workers[i].worker_id = i; workers[i].pi_old = 1.0; workers[i].pi_theta = 1.0; workers[i].is_pi_worker = (i == 3); pthread_create(&threads[i], NULL, duo_corrugation_task, &workers[i]); }
