@@ -1,5 +1,5 @@
 // ====================================================================
-// TGDK GETH - MOBIUS FOLDED MEMORY CHAIN
+// TGDK - MOBIUS FOLDED MEMORY CHAIN © TGDK 2026
 // LICENSE: BFE-TGDK-022ST | Holder: Sean Tichenor
 // 4 Duo-Corrugations on 3 Phi Lattices + 1 Pi Lattice
 // Concurrent Policy Ratio Clipping (0.8 - 1.2)
