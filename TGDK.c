@@ -23,7 +23,7 @@ type TGDKHeader struct {
     Inverted bool // mobius twist flag
 }
 
-func (c *FRIVIO) Seal() {
+func (c *FIVIO) Seal() {
     // When chain length hits 8, 16, 32...
     // you don't just add a block, you fold the chain through itself
     // This is your "memory chain folding on top and through itself"
