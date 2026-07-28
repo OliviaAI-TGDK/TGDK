@@ -1,0 +1,87 @@
+# NEETs by TGDK - Deployment Manifests
+# Like Kubernetes yaml but for phi/pi lattices
+apiVersion: neets.tgdk.io/v1
+kind: Cluster
+metadata:
+  name: tgdk-mainnet
+  license: BFE-TGDK-022ST
+spec:
+  lattices:
+    - name: phi-0
+      type: phi
+      scalingFactor: 1.6180339887
+      replicas: 1
+      capacity: 1024
+      corrugation: duo
+    - name: phi-1
+      type: phi
+      scalingFactor: 1.6180339887
+      replicas: 1
+      capacity: 1024
+      corrugation: duo
+    - name: phi-2
+      type: phi
+      scalingFactor: 1.6180339887
+      replicas: 1
+      capacity: 1024
+      corrugation: duo
+    - name: pi-0
+      type: pi
+      scalingFactor: 3.1415926535
+      replicas: 1
+      capacity: 1024
+      corrugation: duo
+      mobiusFold: 8  # fold every 8 blocks
+
+---
+apiVersion: neets.tgdk.io/v1
+kind: Deployment
+metadata:
+  name: duo-corrugation-workers
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: corrugator
+  template:
+    metadata:
+      labels:
+        app: corrugator
+    spec:
+      containers:
+        - name: phi-corrugator
+          image: tgdk/corrugator:phi-022ST
+          env:
+            - name: LATTICE_TYPE
+              value: "phi"
+            - name: POLICY_CLIP_MIN
+              value: "0.8"
+            - name: POLICY_CLIP_MAX
+              value: "1.2"
+            - name: MARA_FACTOR
+              value: "1.618"
+          resources:
+            memory: "4096Mi"
+          command: ["./tgdk", "--corrugate", "duo"]
+        - name: pi-corrugator
+          image: tgdk/corrugator:pi-022ST
+          env:
+            - name: LATTICE_TYPE
+              value: "pi"
+            - name: MOBIUS_ENABLED
+              value: "true"
+          command: ["./tgdk", "--corrugate", "duo", "--seal-knot"]
+
+---
+apiVersion: neets.tgdk.io/v1
+kind: Service
+metadata:
+  name: tgdk-geth-rpc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8545
+      targetPort: 8545
+      name: geth-rpc
+  selector:
+    app: corrugator
