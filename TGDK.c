@@ -1,4 +1,6 @@
-
+#imclude "./core/memory.c"
+#imclude "./core/lattice.c"
+#include "./core/duo.c"
 
 type TGDKHeader struct {
     PrevHash common.Hash
