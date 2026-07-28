@@ -1,5 +1,6 @@
 // ====================================================================
 // TGDK - MOBIUS FOLDED MEMORY CHAIN + NEETs by TGDK
+// COMBINED BUILD - KUBERNEETS FOR MEMORY
 // LICENSE: BFE-TGDK-022ST | Holder: Sean Tichenor
 // (c) TGDK 2026 - All rights reserved
 // 4 Duo-Corrugations on 3 Phi Lattices + 1 Pi Lattice
